@@ -1,3 +1,17 @@
 wget https://github.com/YaroslavLitvinov/mriya/archive/master.zip
 
-sudo docker build -t mriya_service .; sudo docker run -p 4000:80 mriya_service
+# build base image at first
+sudo docker build -f Dockerfile.base -t mriya_base .;
+
+# build debug image with temp admin (base on mriya_base)
+sudo docker build -f Dockerfile.debug -t mriya_service .;
+
+# run it
+sudo docker run -p 4000:80 mriya_service
+
+# run terminal
+sudo docker run -it --entrypoint=/bin/bash mriya_service
+
+# skip it, onlfy for non debug
+sudo docker run -i --entrypoint=/bin/bash mriya_service:latest < django-setup.txt;
+

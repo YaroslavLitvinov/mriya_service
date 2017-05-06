@@ -1,11 +1,13 @@
 {% if logged_as_user %}
     <p>Logged in as: {{ logged_as_user }}</p>
 {% else %}
+    <p>You are not logged in yet. Please login now.</p>    
+{% endif %}    
     <form action="/login" method="get">
        {% csrf_token %}
        {{ form }}
-      <label>Your name: </label>
-      <input type="text" name="user_name">
+      <!-- <label>Your name: </label> -->
+      <!-- <input type="text" name="user_name"> -->
       <input type="submit" value="OK">
     </form>
-{% endif %}
+

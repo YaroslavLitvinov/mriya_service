@@ -1,15 +1,13 @@
 #!/bin/bash
 
-echo Apply database migrations
-python manage.py makemigrations mriya_service
-
 #echo Current dir:
-#exec find . -type f
-#echo project dir:
-#exec find /docker_mriya -type f
+#find /mriya_service -ls -type f
+
+echo Start Nginx
+/etc/init.d/nginx restart
 
 # Start Gunicorn processes
-echo Starting Gunicorn.
 exec gunicorn mriya_service.wsgi:application \
-    --bind 0.0.0.0:80 \
-    --workers 3
+    --bind unix:/mriya_service.sock \
+    --workers 3 \
+    --log-file -

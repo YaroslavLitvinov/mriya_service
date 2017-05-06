@@ -21,6 +21,6 @@ import mriya_service.views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', mriya_service.views.index),
-    url(r'^login$', TemplateView.as_view(template_name="index.html")),
+    url(r'^login$', mriya_service.views.login),
     url(r'^edit$', mriya_service.views.edit_query),
 ]
