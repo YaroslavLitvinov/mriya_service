@@ -1,34 +1,40 @@
+import sys
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template.loader import get_template
-from mriya_service.forms import LoginForm
-from mriya_service.models import Login
+from .models import MyQuery
+from .forms import QueryForm
+from .forms import LoginForm
 
 def index(request):
-    return HttpResponseRedirect('/login')
+    return HttpResponseRedirect('/edit')
 
-def login(request):
+@login_required(login_url='/login/')
+def execute(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = QueryForm(request.POST)
         if form.is_valid():
+            form.data['user'] = request.user
+            query = form.cleaned_data['query']
             form.save()
-    try:
-        user = Login.objects.get()
-    except:
-        user = None
-    form = LoginForm(initial={'user':user})
+            return HttpResponse('Query executed')
+        else:
+            return HttpResponse('Bad request')
+    else:
+        return HttpResponseRedirect('/edit')
 
-    # from django.db import connection
-    # import sys
-    # tables = connection.introspection.table_names()
-    # sys.stderr.write(str(tables))
-    # seen_models = connection.introspection.installed_models(tables)
-    # sys.stderr.write(str(seen_models))
-    # sys.stderr.write(str(connection.settings_dict))
-    
-    return render(request, 'login.html', {'form': form})
-
+#@login_required(login_url='/login/')
 def edit_query(request):
-    return HttpResponse("Edit query.")
+    current_user = request.user
+    # get saved query belonging to user
+    try:
+        saved_query = MyQuery.objects.get(user=current_user).query
+        sys.stderr.write(saved_query)        
+    except MyQuery.DoesNotExist:
+        saved_query = None
+    form = QueryForm(initial={'query':saved_query})
+    return render(request, 'edit.html', {'form': form})

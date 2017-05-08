@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <title>Mriya DMT</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+      Logged in as: {{ user.username }}
+    {% else %}
+      Not yet logged in!
+    {% endif %}
+
+    {% block content %}{% endblock content %}
+  </body>
+</html>

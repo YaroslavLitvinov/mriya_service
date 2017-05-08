@@ -1,7 +1,17 @@
-from django.forms import ModelForm
+from django import forms
+from mriya_service.models import MyQuery
 from mriya_service.models import Login
 
-class LoginForm(ModelForm):
+class LoginForm(forms.ModelForm):
     class Meta:
         model = Login
         fields = ['user']
+
+class QueryForm(forms.ModelForm):
+    query = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 20}))
+    class Meta:
+        model = MyQuery
+        fields = ['query']
+
+
+

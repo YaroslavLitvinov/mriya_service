@@ -1,0 +1,10 @@
+{% extends 'registration/base.html' %}
+
+{% block content %}
+<h2>Edit query</h2>
+<form action="/execute" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit">Run query</button>
+</form>
+{% endblock content %}

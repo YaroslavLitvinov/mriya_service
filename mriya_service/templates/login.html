@@ -3,7 +3,7 @@
 {% else %}
     <p>You are not logged in yet. Please login now.</p>    
 {% endif %}    
-    <form action="/login" method="get">
+    <form action="/login" method="post">
        {% csrf_token %}
        {{ form }}
       <!-- <label>Your name: </label> -->

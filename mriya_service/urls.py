@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 import mriya_service.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', mriya_service.views.index),
-    url(r'^login$', mriya_service.views.login),
+    url(r'^login/', auth_views.login, name='login'),
+    url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^edit$', mriya_service.views.edit_query),
+    #url(r'^$', mriya_service.views.index),    
 ]

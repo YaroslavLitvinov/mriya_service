@@ -1,13 +1,15 @@
 wget https://github.com/YaroslavLitvinov/mriya/archive/master.zip
+unzip master.zip
+mv mriya-master/ mriya
 
 # build base image at first
 sudo docker build -f Dockerfile.base -t mriya_base .;
 
-# build debug image with temp admin (base on mriya_base)
+# build application debug image with temp admin (new image based on mriya_base image)
 sudo docker build -f Dockerfile.debug -t mriya_service .;
 
 # run it
-sudo docker run -p 4000:80 mriya_service
+sudo docker run --rm=true -p 4000:80 mriya_service
 
 # run terminal
 sudo docker run -it --entrypoint=/bin/bash mriya_service
