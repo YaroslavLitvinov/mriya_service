@@ -8,26 +8,31 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from .models import MyQuery
 from .forms import QueryForm
-from .forms import LoginForm
 
 def index(request):
     return HttpResponseRedirect('/edit')
 
 @login_required(login_url='/login/')
 def execute(request):
+    current_user = request.user
     if request.method == 'POST':
-        form = QueryForm(request.POST)
+        try:
+            query_obj = MyQuery.objects.get(user=current_user)
+        except MyQuery.DoesNotExist:
+            query_obj = None
+        form = QueryForm(request.POST, instance=query_obj)
+        sys.stderr.write(str(form.errors))
         if form.is_valid():
-            form.data['user'] = request.user
-            query = form.cleaned_data['query']
+            form.cleaned_data['user'] = str(request.user)
             form.save()
-            return HttpResponse('Query executed')
+            #return HttpResponse('Query executed')
+            return HttpResponseRedirect('/edit')
         else:
             return HttpResponse('Bad request')
     else:
         return HttpResponseRedirect('/edit')
 
-#@login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def edit_query(request):
     current_user = request.user
     # get saved query belonging to user
@@ -36,5 +41,5 @@ def edit_query(request):
         sys.stderr.write(saved_query)        
     except MyQuery.DoesNotExist:
         saved_query = None
-    form = QueryForm(initial={'query':saved_query})
+    form = QueryForm(initial={'query':saved_query, 'user':current_user})
     return render(request, 'edit.html', {'form': form})
