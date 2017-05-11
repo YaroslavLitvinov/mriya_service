@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #echo Current dir:
-#find /mriya_service -ls -type f
+find /mriya_service -ls -type f
 
 echo Start Nginx
 /etc/init.d/nginx restart

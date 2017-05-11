@@ -12,7 +12,7 @@ EXPOSE 80
 
 # Define environment variable
 ENV NAME mriya_service
-ENV PYTHONPATH $PYTHONPATH:/mriya_service/mriya/pybulk/sfbulk/:/mriya_service/mriya
+ENV PYTHONPATH /mriya_service/mriya-master/pybulk/sfbulk/:/mriya_service/mriya-master
 
 RUN python manage.py check
 RUN python manage.py makemigrations mriya_service

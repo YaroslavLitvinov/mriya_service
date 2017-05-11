@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if status == '' %}
+<h2>Update config now</h2>
+Current endpoints are:
+{% else %}
+<h2>Config has been updated</h2>
+New endpoints are:
+{% endif %}
+
+<ul>
+{% for name,item in items.iteritems %}
+  <li>{{ name }}: {{ item.url_prefix }}, {{ item.username }}</li>
+{% endfor %}
+</ul>
+
+<form action="/config" method="post" enctype="multipart/form-data" >
+  {% csrf_token %}
+  {{ form }}
+  <button type="config">Update config</button>
+</form>
+{% endblock content %}

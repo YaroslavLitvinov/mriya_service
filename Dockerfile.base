@@ -3,9 +3,9 @@ FROM python:2.7-slim
 
 WORKDIR /basename
 COPY nginx.conf requirements.txt /basename/
-COPY mriya/requirements.txt /basename/mriya-requirements.txt
+COPY mriya-master/requirements.txt /basename/mriya-requirements.txt
 
-RUN pip install -r mriya-requirements.txt
+RUN pip install -v -r mriya-requirements.txt
 RUN pip install -r requirements.txt
 
 RUN apt-get update -qq && apt-get install -y nginx

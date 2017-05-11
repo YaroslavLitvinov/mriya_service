@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^login/', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^edit$', mriya_service.views.edit_query),
-    url(r'^execute$', mriya_service.views.execute),    
-    url(r'^$', mriya_service.views.index),    
+    url(r'^execute$', mriya_service.views.execute),
+    url(r'^config$', mriya_service.views.config),
+    url(r'^$', mriya_service.views.index),
 ]
