@@ -11,14 +11,13 @@ def config_name(username):
 
 def config_choices(username):
     items = config_items(username)
-    return [(name, items[name].url_prefix)for name in items]
+    return [(name, name)for name in items]
 
 def config_items_f(config_fp):
     res= {}
     config = ConfigParser()
     config.read_file(config_fp)
     config_fp.seek(0)
-    sys.stderr.write(str(config.keys()))
     for name in config:
         if 'DEFAULT' != name.upper():
             res[name] = get_conn_param(config[name])

@@ -17,13 +17,15 @@ def index(request):
 
 @login_required(login_url='/login/')
 def execute(request):
+    choices = config_choices(request.user)
     if request.method == 'POST':
-        current_user = request.user
         try:
-            query_obj = MyQuery.objects.get(user=current_user)
+            query_obj = MyQuery.objects.get(user=request.user)
+            # to update record
             form = QueryForm(request.POST, instance=query_obj)
-        except MyQuery.DoesNotExist:
+        except:
             form = QueryForm(request.POST)
+        form.set_choices(choices)
         if form.is_valid():
             form.cleaned_data['user'] = str(request.user)
             form.save()
@@ -40,19 +42,15 @@ def edit_query(request):
     # get saved query belonging to user
     try:
         query_obj = MyQuery.objects.get(user=current_user)
-        saved_query = query_obj.query
-        src = query_obj.src
-        dst = query_obj.dst
-        sys.stderr.write(saved_query)        
+        form = QueryForm(initial={'query': query_obj.query,
+                                  'user': current_user,
+                                  'src': query_obj.src,
+                                  'dst': query_obj.dst})
+        form.set_choices(choices)
     except MyQuery.DoesNotExist:
-        saved_query = None
-        src = None
-        dst = None
-    form = QueryForm(initial={'query':saved_query,
-                              'user':current_user,
-                              'src':src,
-                              'dst': dst},
-                     src_choices=choices, dst_choices=choices)
+        form = QueryForm(initial={'user': current_user})
+        if choices:
+            form.set_choices(choices)
     return render(request, 'edit.html', {'form': form})
 
 @login_required(login_url='/login/')
