@@ -1,7 +1,9 @@
 #!/bin/bash
 
-#echo Current dir:
-find /mriya_service -ls -type f
+echo /var/www dir:
+find /var/www -ls -type f
+
+echo PYTHONPATH $PYTHONPATH
 
 echo Start Nginx
 /etc/init.d/nginx restart

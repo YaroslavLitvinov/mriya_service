@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.conf.urls import include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
@@ -27,4 +28,6 @@ urlpatterns = [
     url(r'^execute$', mriya_service.views.execute),
     url(r'^config$', mriya_service.views.config),
     url(r'^$', mriya_service.views.index),
+    url(r'^elfinder/', include('elfinder.urls')),
+    url(r'^fm$', mriya_service.views.FMTestView.as_view()),
 ]

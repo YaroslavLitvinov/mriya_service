@@ -1,11 +1,12 @@
-wget https://github.com/YaroslavLitvinov/mriya/archive/master.zip
-unzip master.zip
+wget https://github.com/YaroslavLitvinov/mriya/archive/master.zip && unzip master.zip
+wget https://github.com/yawd/yawd-elfinder/archive/v0.90.03.zip && unzip v0.90.03.zip
+mv yawd-elfinder-0.90.03 yawd-elfinder
 
 # build base image at first
-sudo docker build -f Dockerfile.base -t mriya_base .;
+sudo docker build --no-cache=true --rm=true -f Dockerfile.base -t mriya_base .;
 
 # build application debug image with temp admin (new image based on mriya_base image)
-sudo docker build -f Dockerfile.debug -t mriya_service .;
+sudo docker build --no-cache=true --rm=true -f Dockerfile.debug -t mriya_service .;
 
 # run it
 sudo docker run --rm=true -p 4000:80 mriya_service
@@ -15,4 +16,7 @@ sudo docker run -it --entrypoint=/bin/bash mriya_service
 
 # skip it, onlfy for non debug
 sudo docker run -i --entrypoint=/bin/bash mriya_service:latest < django-setup.txt;
+
+; get file from working container
+sudo docker cp {container_name}:/var/log/nginx/error.log /tmp
 

@@ -6,8 +6,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template.loader import get_template
+from django.views.generic import DetailView
 from django import forms # for runtime altering
-from .models import MyQuery, Config
+from .models import MyQuery, Config, FMTestModel
 from .forms import QueryForm, ConfigForm
 from .mriya_interface import config_items_f, save_uploaded_config_f, config_items
 from .mriya_interface import config_name, config_choices
@@ -35,7 +36,7 @@ def execute(request):
     else:
         return HttpResponseRedirect('/edit')
 
-@login_required(login_url='/login/')
+#@login_required(login_url='/login/')
 def edit_query(request):
     current_user = request.user
     choices = config_choices(current_user)
@@ -84,3 +85,9 @@ def config(request):
     return render(request, 'config.html', {'form': form,
                                            'status': status,
                                            'items': items})
+
+class FMTestView(DetailView):
+    template_name = 'fm.html'
+    
+    def get_object(self):
+        return FMTestModel.objects.get(pk=1)

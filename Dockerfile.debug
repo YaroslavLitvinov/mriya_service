@@ -1,23 +1,35 @@
 # Use an official Python runtime as a base image
 FROM mriya_base
 
+RUN rm /etc/nginx/sites-available/default
+COPY nginx-mriya.conf /etc/nginx/sites-enabled/mriya.conf
+
 # Set the working directory to /app
 WORKDIR /mriya_service
 
 # Copy the current directory contents into the container at /mriya_service
 ADD . /mriya_service
 
+COPY yawd-elfinder /yawd-elfinder
+
 # Make port available to the world outside this container
 EXPOSE 80
 
 # Define environment variable
 ENV NAME mriya_service
-ENV PYTHONPATH /mriya_service/mriya-master/pybulk/sfbulk/:/mriya_service/mriya-master
+ENV PYTHONPATH /yawd-elfinder:/yawd-elfinder/elfinder
+ENV PYTHONPATH $PYTHONPATH:/mriya_service/mriya-master/pybulk/sfbulk/:/mriya_service/mriya-master
 
-RUN python manage.py check
-RUN python manage.py makemigrations mriya_service
-RUN python manage.py migrate
+RUN echo PYTHONPATH $PYTHONPATH
+
+RUN python manage.py syncdb --noinput
 RUN python manage.py collectstatic --noinput
+
+#RUN mkdir -p uploads
+#RUN python manage.py check
+#RUN python manage.py makemigrations mriya_service
+#RUN python manage.py migrate
+#RUN python manage.py collectstatic --noinput
 
 RUN echo "from django.contrib.auth.models import User; User.objects.filter(email='admin@example.com').delete(); User.objects.create_superuser(username='admin', password='pass', email='admin@example.com');from django.db import connection;import sys;tables = connection.introspection.table_names();sys.stderr.write(str(tables));" | python manage.py shell
 
